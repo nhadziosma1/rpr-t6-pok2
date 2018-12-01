@@ -1,0 +1,11 @@
+
+/*StyleClass se poziva sa tackom*/
+.poljeIspravno
+{
+    -fx-control-inner-background: lightgreen;
+}
+
+.poljeNeispravno
+{
+    -fx-control-inner-background: pink;
+}
