@@ -14,7 +14,12 @@
 
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import java.net.URL?>
 <GridPane fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="4" vgap="4">
+
+    <stylesheets>
+        <URL value="@stil.css"/>
+    </stylesheets>
 
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
@@ -77,8 +82,15 @@
     <RadioButton fx:id="unesiStatusRedovan" GridPane.rowIndex="9" GridPane.columnIndex="5" text="Redovan"/>
     <RadioButton fx:id="unesiStatusSamofinansirajuci" GridPane.rowIndex="9" GridPane.columnIndex="6" text="Samofinansirajuci"/>
 
+    <Label fx:id="borackaPrava" GridPane.rowIndex="10" GridPane.columnIndex="4" text="Pripadnost borackim kategorijama: "/>
+    <CheckBox fx:id="unesiBorackiDa" GridPane.rowIndex="10" GridPane.columnIndex="5" />
+
+    <Button fx:id="potvrdiBtn" GridPane.rowIndex="11" GridPane.columnIndex="6" text="Potvrdi" onAction="#potvrdi"/>
+
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
     </padding>
+
+
 
 </GridPane>

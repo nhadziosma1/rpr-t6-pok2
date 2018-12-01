@@ -1,6 +1,5 @@
 package sample;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,23 +29,29 @@ public class Controller
     public ChoiceBox unesiCiklusStudija;
     public RadioButton unesiStatusRedovan;
     public RadioButton unesiStatusSamofinansirajuci;
+    public CheckBox unesiBorackiDa;
 
     public void initialize() /*pokrece se odmah pri kreiranju*/
     {
-        unesiGrad.setItems(FXCollections.observableArrayList("Sarajevo", "Tuzla", "Mostar", "Brcko", "Trebinje", "Zenica", "Banja Luka"));
+        unesiGrad.setItems(FXCollections.observableArrayList("Sarajevo", "Tuzla", "Mostar", "Brcko", "Trebinje", "Zenica", "Banja Luka", "Novi Pazar", "Foca"));
         unesiGrad.getSelectionModel().selectFirst();
         unesiCiklusStudija.setItems(FXCollections.observableArrayList("Bachelor", "Master", "Doktorski studij", "Strucni studij"));
         unesiCiklusStudija.getSelectionModel().selectFirst();
         unesiGodinuStudija.setItems(FXCollections.observableArrayList("Prva", "Druga", "Treca"));
-        unesiGodinuStudija.getSelectionModel().selectFirst();
+        /*
+            radi vjezbe na oba nacina ce biti uradjeno ubacivanje, npr ovje cemo sotaviti prazno polje, pa provjeriti je li ista uneseno,
+            a ne zadati odmah defaultno sta ce biti izabrano kao sto je uradjeno gore za CiklusStudija
+
+            1. nacin:
+            unesiGodinuStudija.getSelectionModel().selectFirst();
+         */
         unesiOdsjek.setItems(FXCollections.observableArrayList("Elektroenergetika", "Autoamtika i elektronika", "Racunarstvo i informatika", "Telekomunikacije"));
         unesiOdsjek.getSelectionModel().selectFirst();
 
         /*svaka promjenjiva ima svoj StyleClass, klasa koja je direktno povezana sa CSSom*/
         /* ovako se bveze vise stavri iz FXMLa sa jednom stvari iz CSSa*/
         /*jedno polje moze imati vise StyleClassova*/
-        unesiIme.textProperty().addListener(new ChangeListener<String>()
-        {
+        unesiIme.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
                 if (validnoImePrezime(n)) {
@@ -98,14 +103,27 @@ public class Controller
             }
         });
 
-        unesiGrad.editorProperty().addListener(new ChangeListener<String>()
-        {
+        unesiEmail.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
+                if (validanEmail(n)) {
+                    unesiEmail.getStyleClass().removeAll("poljeNijeIspravno");
+                    unesiEmail.getStyleClass().add("poljeIspravno");
+                } else {
+                    unesiEmail.getStyleClass().removeAll("poljeIspravno");
+                    unesiEmail.getStyleClass().add("poljeNijeIspravno");
+                }
+            }
+        });
+
+        unesiGrad.valueProperty().addListener(new ChangeListener<String>()
+        {                                                                                                         /*".valueProperty()"*/
             /*za ComboBox tip u kojem postoje predlozeni unosi, da bi se izvrsila provjera mora se koristiti metoda ".editorPropery()* koja
              vraca omotac za TextFielda preko kojeg se moze ispitivati ispravnost unosa kao i za normalan TextField */
 
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validnaGrad(n)) {
+                if (validanGrad(n)) {
                     unesiGrad.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiGrad.getStyleClass().add("poljeIspravno");
                 } else {
@@ -135,19 +153,42 @@ public class Controller
         unesiStatusSamofinansirajuci.setToggleGroup(group);
     }///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean validnaGrad(String rijec)
+    private boolean validanEmail(String rijec)
     {
-        if(rijec.matches("[a-zA-z]")==false)
+        if(rijec.contains("@")==false)
             return false;
 
-        if(Character.isLowerCase(rijec.charAt(0))==false)
+        String prije_la = rijec.substring(0, rijec.indexOf('@'));
+        String poslije_la = rijec.substring(rijec.indexOf('@'), rijec.length());
+
+
+        if(poslije_la.contains(".")==false)
             return false;
 
-        for(int i=0; i<rijec.length(); i++)
+        String extenzija = poslije_la.substring(poslije_la.indexOf('.')+1);
+
+        if(extenzija.matches("[a-z]+")==false)
+            return false;
+
+        return true;
+    }
+
+    private boolean validanGrad(String rijec)
+    {
+        /*kada stoji bez plusa podrazumijevalo bi se da se string "rijec" sastoji od jednog karaktera koji je u zadanom rasponu,
+          dok sa plusaom podrazumijevamo da je jedan karakter ili vise, dok bi sa "*" i string koji nema nijedan iz intervala vratio true*/
+        if(rijec.matches("[a-zA-Z]+")==false)
+            return false;
+
+        if(Character.isUpperCase(rijec.charAt(0))==false)
+            return false;
+
+        for(int i=1; i<rijec.length(); i++)
         {
             if(Character.isUpperCase(rijec.charAt(i))==true)
                 return false;
         }
+        return true;
     }
 
     private boolean validnaAdresa(String rijec)
@@ -161,7 +202,7 @@ public class Controller
         String ime_ulice = rijec.substring(0, rijec.indexOf(' '));
         String broj_ulice = rijec.substring(rijec.indexOf(' ')+1, rijec.length());
 
-        if(ime_ulice.matches("[a-zA-z]+")==false || broj_ulice.matches("[0-9]+")==false)
+        if(ime_ulice.matches("[a-zA-Z]+")==false || broj_ulice.matches("[0-9]+")==false)
             return false;
 
         return true;
@@ -207,7 +248,7 @@ public class Controller
         if(Character.isLowerCase(rijec.charAt(0)))
             return false;
 
-        for(int i=0; i<rijec.length(); i++)
+        for(int i=1; i<rijec.length(); i++)
         {
             if(Character.isUpperCase(rijec.charAt(i)))
                 return false;
@@ -270,5 +311,45 @@ public class Controller
             return false;
 
         return true;
+    }
+
+    public void potvrdi(ActionEvent actionEvent)
+    {
+        //if()
+
+
+        ispisiPodatke();
+    }
+
+    private void ispisiPodatke()
+    {
+        System.out.println("Ime: " + unesiIme.getText());
+        System.out.println("Prezime: " + unesiPrezime.getText());
+        System.out.println("Broj indeksa: " + unesiBrojIndeksa.getText());
+        System.out.println("JMBG: " + unesiJMBG.getText());
+        System.out.println("Datum rođenja: " + unesiDatumRodjenja.getValue());
+        System.out.println("Mjesto rođenja: " + unesiGrad.getValue());          /*".getValue()" se koristi za ComboBox, ChoiceBox*/
+
+        if(!(unesiAdresu.getText().equals("")))
+            System.out.println("Kontakt adresa: " + unesiAdresu.getText());
+
+        if( !( unesiTelefon.getText().equals("") ) )
+            System.out.println("Kontakt telefon: " + unesiTelefon.getText());
+
+        System.out.println("Email adresa: " + unesiEmail.getText());
+        System.out.println("Odsjek: " + unesiOdsjek.getValue());
+        System.out.println("Godina studija: " + unesiGodinuStudija.getValue());
+        System.out.println("Ciklus studija: " + unesiCiklusStudija.getValue());
+
+        if( unesiStatusRedovan.isSelected() )
+            System.out.println("Redovan student");
+
+        if( unesiStatusSamofinansirajuci.isSelected() )
+            System.out.println("Redovan samofinansirajući student");
+
+        if( unesiBorackiDa.isSelected() )
+            System.out.println("Pripada boračkoj kategoriji");
+        else
+            System.out.println("Ne pripada boračkoj kategoriji");
     }
 }
