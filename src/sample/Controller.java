@@ -4,15 +4,30 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
+//import javax.xml.validation.Validator;   OVA METODA JE CINILA TAKO DA SE "Validator" POSMATRA KAO KLASA, A NE NAMA POTREBNI INTERFEJS
+import javafx.stage.Stage;
+import org.controlsfx.validation.Validator;
+
+
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.ResourceBundle;
 
-public class Controller
+import org.controlsfx.validation.ValidationSupport;
+
+//import org.apache.commons.validator.routines.EmailValidator;    ??????????????? zasto ne radi
+
+public class Controller implements Initializable
 {
     public TextField unesiIme;
     public TextField unesiPrezime;
@@ -31,8 +46,10 @@ public class Controller
     public RadioButton unesiStatusSamofinansirajuci;
     public CheckBox unesiBorackiDa;
 
-    public void initialize() /*pokrece se odmah pri kreiranju*/
-    {
+    @Override
+    public void initialize(URL location, ResourceBundle resources)  /*pokrece se odmah pri kreiranju*/
+    {  /*ovi parametri moraju postojati, jer je obavezno preklopiti ovu metodu kada implementiramo "Initializable"*/
+
         unesiGrad.setItems(FXCollections.observableArrayList("Sarajevo", "Tuzla", "Mostar", "Brcko", "Trebinje", "Zenica", "Banja Luka", "Novi Pazar", "Foca"));
         unesiGrad.getSelectionModel().selectFirst();
         unesiCiklusStudija.setItems(FXCollections.observableArrayList("Bachelor", "Master", "Doktorski studij", "Strucni studij"));
@@ -103,18 +120,35 @@ public class Controller
             }
         });
 
-        unesiEmail.textProperty().addListener(new ChangeListener<String>() {
+        unesiTelefon.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validanEmail(n)) {
-                    unesiEmail.getStyleClass().removeAll("poljeNijeIspravno");
-                    unesiEmail.getStyleClass().add("poljeIspravno");
+                if (validanTelefon(n)) {
+                    unesiTelefon.getStyleClass().removeAll("poljeNijeIspravno");
+                    unesiTelefon.getStyleClass().add("poljeIspravno");
                 } else {
-                    unesiEmail.getStyleClass().removeAll("poljeIspravno");
-                    unesiEmail.getStyleClass().add("poljeNijeIspravno");
+                    unesiTelefon.getStyleClass().removeAll("poljeIspravno");
+                    unesiTelefon.getStyleClass().add("poljeNijeIspravno");
                 }
             }
         });
+
+        /*
+        ne radi ni ovaj dio, zato jer ono gore ne radi???????????????????????????????????'''
+        unesiEmail.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> obs, String o, String n) {
+                EmailValidator validator = EmailValidator.getInstance();
+                if (validator.isValid(n)) {
+                    emailField.getStyleClass().removeAll("poljeNijeIspravno");
+                    emailField.getStyleClass().add("poljeIspravno");
+                } else {
+                    emailField.getStyleClass().removeAll("poljeIspravno");
+                    emailField.getStyleClass().add("poljeNijeIspravno");
+                }
+            }
+        });*/
+
 
         unesiGrad.valueProperty().addListener(new ChangeListener<String>()
         {                                                                                                         /*".valueProperty()"*/
@@ -146,12 +180,65 @@ public class Controller
             }
         });
 
-
         ToggleGroup group = new ToggleGroup();  /*objednjiava RadioButtene*/
         unesiStatusRedovan.setToggleGroup(group); /*isSelected metoda postoji*/
-        unesiStatusRedovan.setSelected(true);
         unesiStatusSamofinansirajuci.setToggleGroup(group);
+        unesiStatusRedovan.setSelected(true);
+
+        ValidationSupport validation = new ValidationSupport();
+        unesiIme.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+                if(!n)
+                    validation.registerValidator(unesiIme, Validator.createEmptyValidator("Prazno polje"));
+            }
+        });
+        unesiPrezime.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+                if(!n)
+                    validation.registerValidator(unesiPrezime,Validator.createEmptyValidator("Prazno polje"));
+            }
+        });
+        unesiJMBG.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+                if(!n)
+                    validation.registerValidator(unesiJMBG, Validator.createEmptyValidator("Prazno polje"));
+            }
+        });
+        unesiEmail.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+                if(!n)
+                    validation.registerValidator(unesiEmail,Validator.createEmptyValidator("Prazno polje"));
+            }
+        });
+        unesiBrojIndeksa.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+                if(!n)
+                    validation.registerValidator(unesiBrojIndeksa,Validator.createEmptyValidator("Prazno polje"));
+            }
+        });
+        unesiDatumRodjenja.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
+                if(!n)
+                    validation.registerValidator(unesiDatumRodjenja,Validator.createEmptyValidator("Prazno polje"));
+            }
+        });
+
     }///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean validanTelefon(String broj)
+    {
+        /*postavkom zadatka je zadato da je i prazno pole tacno, zbog toga ide "*" umjesto "+" */
+        if(broj.matches("[0-9]+")==false)
+            return false;
+
+        return true;
+    }
 
     private boolean validanEmail(String rijec)
     {
@@ -159,13 +246,15 @@ public class Controller
             return false;
 
         String prije_la = rijec.substring(0, rijec.indexOf('@'));
-        String poslije_la = rijec.substring(rijec.indexOf('@'), rijec.length());
+        String poslije_la = rijec.substring(rijec.indexOf('@'));
 
 
         if(poslije_la.contains(".")==false)
             return false;
 
-        String extenzija = poslije_la.substring(poslije_la.indexOf('.')+1);
+        String extenzija = poslije_la.substring(poslije_la.indexOf('.'));
+
+        extenzija=extenzija.substring(1);
 
         if(extenzija.matches("[a-z]+")==false)
             return false;
@@ -284,7 +373,6 @@ public class Controller
         if(ggg>18 && ggg<850) /*ovo vrijedi samo za trenutnu situacija sa godinama*/
             return false;
 
-
         int k = Integer.parseInt(rijec.substring(12, 13));
 
         int l = 11 - ((7*(Integer.parseInt(unesiJMBG.getText(0,1)) + Integer.parseInt(unesiJMBG.getText(6,7))) +
@@ -301,7 +389,6 @@ public class Controller
         if(l>9 && k!=0)
             return false;
 
-
         return true;
     }
 
@@ -313,12 +400,50 @@ public class Controller
         return true;
     }
 
+    private void upozori(ActionEvent actionEvent)
+    {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Greška");
+        alert.setHeaderText("Forma nije validna!");
+        alert.setContentText("Unesite ispravne podatke!");
+        alert.showAndWait();
+    }
+
     public void potvrdi(ActionEvent actionEvent)
     {
-        //if()
+        if(!jeLiSveValidno())
+            upozori(actionEvent);
+        else {
+            ispisiPodatke();
+            Node n = (Node) actionEvent.getSource();
+            Stage stage = (Stage) n.getScene().getWindow();
+            stage.close();
+        }
 
+    }
 
-        ispisiPodatke();
+    private boolean jeLiSveValidno() {
+        if(unesiIme.getText().length() == 0 || unesiPrezime.getText().length() == 0 || unesiBrojIndeksa.getText().length() == 0 ||
+                unesiEmail.getText().length() == 0 || unesiJMBG.getText().length() == 0 || unesiDatumRodjenja.getValue() == null)
+            return false;
+
+        ArrayList<ObservableList<String>> validnost = new ArrayList<>();
+        validnost.add(unesiIme.getStyleClass());
+        validnost.add(unesiPrezime.getStyleClass());
+        validnost.add(unesiJMBG.getStyleClass());
+        validnost.add(unesiBrojIndeksa.getStyleClass());
+        validnost.add(unesiAdresu.getStyleClass());
+        validnost.add(unesiTelefon.getStyleClass());
+        validnost.add(unesiEmail.getStyleClass());
+        validnost.add(unesiDatumRodjenja.getStyleClass());
+        validnost.add(unesiGrad.getStyleClass());
+
+        for(ObservableList<String> o : validnost)
+        {
+            if(o.contains("poljeNijeIspravno"))
+                return false;
+        }
+        return true;
     }
 
     private void ispisiPodatke()
