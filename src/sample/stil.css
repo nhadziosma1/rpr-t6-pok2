@@ -9,3 +9,8 @@
 {
     -fx-control-inner-background: pink;
 }
+
+#glavniGrid
+{
+    -fx-background-image: url("vodena.jpg");
+}
