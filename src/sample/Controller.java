@@ -132,22 +132,20 @@ public class Controller implements Initializable
             }
         });
 
-        /*
-        ne radi ni ovaj dio, zato jer ono gore ne radi???????????????????????????????????'''
+
+        //ne radi ni ovaj dio, zato jer ono gore ne radi???????????????????????????????????'''
         unesiEmail.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> obs, String o, String n) {
-                EmailValidator validator = EmailValidator.getInstance();
-                if (validator.isValid(n)) {
-                    emailField.getStyleClass().removeAll("poljeNijeIspravno");
-                    emailField.getStyleClass().add("poljeIspravno");
+                if (validanEmail(n)) {
+                    unesiEmail.getStyleClass().removeAll("poljeNijeIspravno");
+                    unesiEmail.getStyleClass().add("poljeIspravno");
                 } else {
-                    emailField.getStyleClass().removeAll("poljeIspravno");
-                    emailField.getStyleClass().add("poljeNijeIspravno");
+                    unesiEmail.getStyleClass().removeAll("poljeIspravno");
+                    unesiEmail.getStyleClass().add("poljeNijeIspravno");
                 }
             }
-        });*/
-
+        });
 
         unesiGrad.valueProperty().addListener(new ChangeListener<String>()
         {                                                                                                         /*".valueProperty()"*/
@@ -188,43 +186,93 @@ public class Controller implements Initializable
         unesiIme.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
-                if(!n)
-                    validation.registerValidator(unesiIme, Validator.createEmptyValidator("Prazno polje"));
+                if(!n) {
+                    if (validnoImePrezime(unesiIme.getText())) {
+                        unesiIme.getStyleClass().removeAll("poljeNijeIspravno");
+                        unesiIme.getStyleClass().add("poljeIspravno");
+                    } else {
+                        unesiIme.getStyleClass().removeAll("poljeIspravno");
+                        unesiIme.getStyleClass().add("poljeNijeIspravno");
+                    }
+                }
             }
         });
         unesiPrezime.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
-                    validation.registerValidator(unesiPrezime,Validator.createEmptyValidator("Prazno polje"));
+                {
+                    if (validnoImePrezime(unesiPrezime.getText())) {
+                        unesiPrezime.getStyleClass().removeAll("poljeNijeIspravno");
+                        unesiPrezime.getStyleClass().add("poljeIspravno");
+                    } else {
+                        unesiPrezime.getStyleClass().removeAll("poljeIspravno");
+                        unesiPrezime.getStyleClass().add("poljeNijeIspravno");
+                    }
+                }
             }
         });
+
         unesiJMBG.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
-                    validation.registerValidator(unesiJMBG, Validator.createEmptyValidator("Prazno polje"));
+                {
+                    if (validanJMBG(unesiJMBG.getText())) {
+                        unesiJMBG.getStyleClass().removeAll("poljeNijeIspravno");
+                        unesiJMBG.getStyleClass().add("poljeIspravno");
+                    } else {
+                        unesiJMBG.getStyleClass().removeAll("poljeIspravno");
+                        unesiJMBG.getStyleClass().add("poljeNijeIspravno");
+                    }
+                }
             }
         });
+
         unesiEmail.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
-                    validation.registerValidator(unesiEmail,Validator.createEmptyValidator("Prazno polje"));
+                {
+                    if (validanEmail(unesiEmail.getText())) {
+                        unesiEmail.getStyleClass().removeAll("poljeNijeIspravno");
+                        unesiEmail.getStyleClass().add("poljeIspravno");
+                    } else {
+                        unesiEmail.getStyleClass().removeAll("poljeIspravno");
+                        unesiEmail.getStyleClass().add("poljeNijeIspravno");
+                    }
+                }
             }
         });
+
         unesiBrojIndeksa.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
-                    validation.registerValidator(unesiBrojIndeksa,Validator.createEmptyValidator("Prazno polje"));
+                {
+                    if (validanBrojIndeksa(unesiBrojIndeksa.getText())) {
+                        unesiBrojIndeksa.getStyleClass().removeAll("poljeNijeIspravno");
+                        unesiBrojIndeksa.getStyleClass().add("poljeIspravno");
+                    } else {
+                        unesiBrojIndeksa.getStyleClass().removeAll("poljeIspravno");
+                        unesiBrojIndeksa.getStyleClass().add("poljeNijeIspravno");
+                    }
+                }
             }
         });
         unesiDatumRodjenja.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
-                    validation.registerValidator(unesiDatumRodjenja,Validator.createEmptyValidator("Prazno polje"));
+                {
+                    if (validanDatum(unesiDatumRodjenja.getValue())) {
+                        unesiDatumRodjenja.getStyleClass().removeAll("poljeNijeIspravno");
+                        unesiDatumRodjenja.getStyleClass().add("poljeIspravno");
+                    } else {
+                        unesiDatumRodjenja.getStyleClass().removeAll("poljeIspravno");
+                        unesiDatumRodjenja.getStyleClass().add("poljeNijeIspravno");
+                    }
+                }
             }
         });
 
@@ -412,7 +460,8 @@ public class Controller implements Initializable
     {
         if(!jeLiSveValidno())
             upozori(actionEvent);
-        else {
+        else
+            {
             ispisiPodatke();
             Node n = (Node) actionEvent.getSource();
             Stage stage = (Stage) n.getScene().getWindow();
@@ -427,6 +476,7 @@ public class Controller implements Initializable
             return false;
 
         ArrayList<ObservableList<String>> validnost = new ArrayList<>();
+
         validnost.add(unesiIme.getStyleClass());
         validnost.add(unesiPrezime.getStyleClass());
         validnost.add(unesiJMBG.getStyleClass());
