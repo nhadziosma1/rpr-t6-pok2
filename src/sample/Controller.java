@@ -70,10 +70,16 @@ public class Controller implements Initializable
         unesiIme.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validnoImePrezime(n)) {
+                if (validnoImePrezime(n))
+                {
+                    /*metoda "getStyleClasses()" vraca "ObservableList<String>" u kojima se nalaze stanja iz css-a,
+                     spasena za to polje. Moze ih postojati vise, s obzirom da se radi o kolekciji, ali najcesce postoje suprotna stanja
+                     u css-u kao sto su "poljeNijeIspravno" i "poljeIspravno", te se stoga moraju prvo svi clanovi OBservableList-e
+                     izbrisati, pa tek onda nakon povratne vrijednosti funkcije za validnost dodati novo stanje*/
                     unesiIme.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiIme.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiIme.getStyleClass().removeAll("poljeIspravno");
                     unesiIme.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -83,10 +89,12 @@ public class Controller implements Initializable
         unesiPrezime.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validnoImePrezime(n)) {
+                if (validnoImePrezime(n))
+                {
                     unesiPrezime.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiPrezime.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiPrezime.getStyleClass().removeAll("poljeIspravno");
                     unesiPrezime.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -96,10 +104,12 @@ public class Controller implements Initializable
         unesiBrojIndeksa.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validanBrojIndeksa(n)) {
+                if (validanBrojIndeksa(n))
+                {
                     unesiBrojIndeksa.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiBrojIndeksa.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiBrojIndeksa.getStyleClass().removeAll("poljeIspravno");
                     unesiBrojIndeksa.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -109,10 +119,12 @@ public class Controller implements Initializable
         unesiAdresu.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validnaAdresa(n)) {
+                if (validnaAdresa(n))
+                {
                     unesiAdresu.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiAdresu.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiAdresu.getStyleClass().removeAll("poljeIspravno");
                     unesiAdresu.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -122,10 +134,12 @@ public class Controller implements Initializable
         unesiTelefon.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validanTelefon(n)) {
+                if (validanTelefon(n))
+                {
                     unesiTelefon.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiTelefon.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiTelefon.getStyleClass().removeAll("poljeIspravno");
                     unesiTelefon.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -137,10 +151,12 @@ public class Controller implements Initializable
         unesiEmail.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> obs, String o, String n) {
-                if (validanEmail(n)) {
+                if (validanEmail(n))
+                {
                     unesiEmail.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiEmail.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiEmail.getStyleClass().removeAll("poljeIspravno");
                     unesiEmail.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -154,10 +170,12 @@ public class Controller implements Initializable
 
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
-                if (validanGrad(n)) {
+                if (validanGrad(n))
+                {
                     unesiGrad.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiGrad.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiGrad.getStyleClass().removeAll("poljeIspravno");
                     unesiGrad.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -167,10 +185,12 @@ public class Controller implements Initializable
         unesiDatumRodjenja.valueProperty().addListener(new ChangeListener<LocalDate>() {
             @Override
             public void changed(ObservableValue<? extends LocalDate> observableValue, LocalDate o, LocalDate n) {
-                if (validanDatum(n)) {
+                if (validanDatum(n))
+                {
                     unesiDatumRodjenja.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiDatumRodjenja.getStyleClass().add("poljeIspravno");
-                } else {
+                }
+                else {
                     unesiDatumRodjenja.getStyleClass().removeAll("poljeIspravno");
                     unesiDatumRodjenja.getStyleClass().add("poljeNijeIspravno");
                 }
@@ -187,10 +207,12 @@ public class Controller implements Initializable
             @Override
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n) {
-                    if (validnoImePrezime(unesiIme.getText())) {
+                    if (validnoImePrezime(unesiIme.getText()))
+                    {
                         unesiIme.getStyleClass().removeAll("poljeNijeIspravno");
                         unesiIme.getStyleClass().add("poljeIspravno");
-                    } else {
+                    }
+                    else {
                         unesiIme.getStyleClass().removeAll("poljeIspravno");
                         unesiIme.getStyleClass().add("poljeNijeIspravno");
                     }
@@ -202,10 +224,12 @@ public class Controller implements Initializable
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
                 {
-                    if (validnoImePrezime(unesiPrezime.getText())) {
+                    if (validnoImePrezime(unesiPrezime.getText()))
+                    {
                         unesiPrezime.getStyleClass().removeAll("poljeNijeIspravno");
                         unesiPrezime.getStyleClass().add("poljeIspravno");
-                    } else {
+                    }
+                    else {
                         unesiPrezime.getStyleClass().removeAll("poljeIspravno");
                         unesiPrezime.getStyleClass().add("poljeNijeIspravno");
                     }
@@ -218,10 +242,12 @@ public class Controller implements Initializable
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
                 {
-                    if (validanJMBG(unesiJMBG.getText())) {
+                    if (validanJMBG(unesiJMBG.getText()))
+                    {
                         unesiJMBG.getStyleClass().removeAll("poljeNijeIspravno");
                         unesiJMBG.getStyleClass().add("poljeIspravno");
-                    } else {
+                    }
+                    else {
                         unesiJMBG.getStyleClass().removeAll("poljeIspravno");
                         unesiJMBG.getStyleClass().add("poljeNijeIspravno");
                     }
@@ -234,10 +260,12 @@ public class Controller implements Initializable
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
                 {
-                    if (validanEmail(unesiEmail.getText())) {
+                    if (validanEmail(unesiEmail.getText()))
+                    {
                         unesiEmail.getStyleClass().removeAll("poljeNijeIspravno");
                         unesiEmail.getStyleClass().add("poljeIspravno");
-                    } else {
+                    }
+                    else {
                         unesiEmail.getStyleClass().removeAll("poljeIspravno");
                         unesiEmail.getStyleClass().add("poljeNijeIspravno");
                     }
@@ -250,10 +278,12 @@ public class Controller implements Initializable
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
                 {
-                    if (validanBrojIndeksa(unesiBrojIndeksa.getText())) {
+                    if (validanBrojIndeksa(unesiBrojIndeksa.getText()))
+                    {
                         unesiBrojIndeksa.getStyleClass().removeAll("poljeNijeIspravno");
                         unesiBrojIndeksa.getStyleClass().add("poljeIspravno");
-                    } else {
+                    }
+                    else {
                         unesiBrojIndeksa.getStyleClass().removeAll("poljeIspravno");
                         unesiBrojIndeksa.getStyleClass().add("poljeNijeIspravno");
                     }
@@ -265,10 +295,12 @@ public class Controller implements Initializable
             public void changed(ObservableValue<? extends Boolean> obs, Boolean o, Boolean n) {
                 if(!n)
                 {
-                    if (validanDatum(unesiDatumRodjenja.getValue())) {
+                    if (validanDatum(unesiDatumRodjenja.getValue()))
+                    {
                         unesiDatumRodjenja.getStyleClass().removeAll("poljeNijeIspravno");
                         unesiDatumRodjenja.getStyleClass().add("poljeIspravno");
-                    } else {
+                    }
+                    else {
                         unesiDatumRodjenja.getStyleClass().removeAll("poljeIspravno");
                         unesiDatumRodjenja.getStyleClass().add("poljeNijeIspravno");
                     }
