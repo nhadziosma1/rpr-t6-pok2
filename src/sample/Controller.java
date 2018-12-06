@@ -72,10 +72,11 @@ public class Controller implements Initializable
             public void changed(ObservableValue<? extends String> observableValue, String o, String n) {
                 if (validnoImePrezime(n))
                 {
-                    /*metoda "getStyleClasses()" vraca "ObservableList<String>" u kojima se nalaze stanja iz css-a,
-                     spasena za to polje. Moze ih postojati vise, s obzirom da se radi o kolekciji, ali najcesce postoje suprotna stanja
-                     u css-u kao sto su "poljeNijeIspravno" i "poljeIspravno", te se stoga moraju prvo svi clanovi OBservableList-e
-                     izbrisati, pa tek onda nakon povratne vrijednosti funkcije za validnost dodati novo stanje*/
+                    /*Metoda "getStyleClasses()" vraca "ObservableList<String>" u kojem se nalaze stanja iz css-a,spasena za to polje
+                      u zavisnosti od prijasnjih sadrzaja polja. Moze stanja postojati vise za jedno polje, s obzirom da se radi o
+                      kolekciji "ObservableList<String>" koja ih sve cuva, ali najcesce postoje suprotna stanja u css-u kao sto su
+                      "poljeNijeIspravno" i "poljeIspravno", te se stoga moraju prvo svi clanovi ObservableList-e
+                      izbrisati, pa tek onda (i na osnovu povratne vrijednosti funkcije za validnost) dodati novo stanje*/
                     unesiIme.getStyleClass().removeAll("poljeNijeIspravno");
                     unesiIme.getStyleClass().add("poljeIspravno");
                 }
